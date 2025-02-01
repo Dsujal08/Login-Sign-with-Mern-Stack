@@ -1,17 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import { BrowserRouter} from 'react-router-dom'
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const cors = require("cors");
+const connection = require("./db");
+const userRoutes = require("./routes/users");
+const authRoutes = require("./routes/auth");
 
+// database connection
+connection();
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <BrowserRouter>
-    <App />
-    </BrowserRouter>
-  </React.StrictMode>
-);
+// middlewares
+app.use(express.json());
+app.use(cors());
 
+// routes
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
+const port = process.env.PORT || 8080;
+app.listen(port, console.log(`Listening on port ${port}...`));
